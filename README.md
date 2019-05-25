@@ -12,13 +12,15 @@ Install dependencies:
 * MacOS: `brew install ffmpeg`
 * Ubuntu: `sudo apt install ffmpeg`
 
-Building:
+To build run:
 `go build`
 
-## Run
-`./subtitler`
-
 ## Usage
+Run `./subtitler`
+
+Then open: [localhost](http://localhost)
+
+## IBM Watson TTS
 To use this app you must have credentials from IBM Speech to Text service.
 You can grab it on your IBM Cloud profile page.
  
