@@ -1,0 +1,96 @@
+{{define "title"}}Converting...{{end}}
+{{define "head"}}{{end}}
+{{define "content"}}
+<script>
+function upload(filename, text) {
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  element.setAttribute('download', filename);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+}
+
+function changeStatus(newStatus) {
+
+    document.getElementsByClassName("page-header")[0].childNodes[1].textContent = newStatus;
+    document.getElementsByClassName("progress-circle")[0].style.visibility = "hidden";
+}
+
+window.addEventListener("beforeunload", function (e) {
+    ws.close();
+});
+
+var ws;
+
+window.addEventListener("load", function(evt) {
+    const host = window.location.host
+    ws = new WebSocket("ws://" + host + "/subtitles/" + {{.websocketRequestToken}});
+    ws.onopen = function(evt) {
+        console.log("OPEN");
+    }
+    ws.onclose = function(evt) {
+        console.log("CLOSE");
+        changeStatus("Converting was stopped");
+        ws = null;
+    }
+    ws.onmessage = function(evt) {
+        upload("subtitles.srt", evt.data);
+        ws.onclose = undefined;
+        changeStatus("Done");
+    }
+    ws.onerror = function(evt) {
+        console.log("ERROR: " + evt.data);
+        changeStatus("Error occured");
+    }
+
+
+});
+
+</script>
+<style>
+// indefinite
+.progress-circle.indefinite .progress {
+  stroke: blue;
+  stroke-width: 2;
+  stroke-dashoffset: 0;
+  stroke-dasharray: 63 188;
+  animation: progress-indef 2s linear infinite;
+}
+
+.progress-circle.indefinite .bg {
+  stroke: #eee;
+  stroke-width: 2;
+}
+
+@keyframes progress-indef {
+  0% { stroke-dashoffset: 251; }
+  100% { stroke-dashoffset: 0; }
+}
+</style>
+
+
+<div class="container">
+	<div class="page-header">
+		<p>
+		Converting in progress...<br>
+		Please wait untill file will be downloaded<br>
+		<small>Note: conversion time is approximately equal to audio file length</small>
+		</p>
+	</div>
+	<svg class="progress-circle indefinite" width="100" height="100">
+      <g transform="rotate(-90,50,50)">
+        <circle class="bg" r="40" cx="50" cy="50" fill="none"></circle>
+        <circle class="progress" r="40" cx="50" cy="50" fill="none"></circle>
+      </g>
+    </svg>
+
+	{{template "footer" .}}
+</div>
+
+{{end}}
+{{define "foot"}}{{end}}

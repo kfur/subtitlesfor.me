@@ -1,0 +1,79 @@
+{{define "title"}}Convert audio files to subtitles{{end}}
+{{define "head"}}{{end}}
+{{define "content"}}
+<script>
+function submitFile() {
+    var file = $('#upload-input')[0].files[0];
+    var data = new FormData();
+    data.append('audio', file)
+
+    $('#convert-btn').text('Uploading...')
+
+    var circleImg = document.createElement('img')
+    circleImg.setAttribute('src', '/static/imgs/loader.gif')
+    circleImg.setAttribute('id', 'circle-img')
+    $('#upload-form')[0].appendChild(circleImg)
+
+    $.ajax({
+        url:'/upload',
+        type:'post',
+        data:data,
+        contentType: false,
+        processData: false,
+        success:function(data){
+            var tokeData = JSON.parse(data)
+            var formForToken = document.createElement('form')
+            formForToken.setAttribute('method', 'post')
+
+            var tokenSubmit = document.createElement('input')
+            tokenSubmit.setAttribute('type', 'hidden')
+            tokenSubmit.setAttribute('name', 'token')
+            tokenSubmit.setAttribute('value', tokeData.token)
+
+            formForToken.appendChild(tokenSubmit)
+            document.head.appendChild(formForToken)
+
+            $('#upload-form')[0].removeChild(circleImg)
+            $('#convert-btn').text('Convert')
+
+            formForToken.submit()
+        }
+    });
+}
+</script>
+<div class="container">
+	<div class="page-header">
+		<h1>{{template "title" .}}</h1>
+	</div>
+	<p>Welcome to the online audio to subtitles converter.<br>
+	Converting is for free.</p>
+	<p>Only support next languages: Brazilian Portuguese, French, German, Japanese, Korean,<br>
+	Mandarin Chinese, Modern Standard Arabic, Spanish, UK English, US English</p>
+	<br>
+	<form id="upload-form" action="upload" method="post">
+      <div class="form-group">
+        <label for="exampleFormControlFile1">Select audio file to upload:</label>
+        <input id="upload-input" type="file" class="form-control-file" name="fileToUpload" id="fileToUpload">
+      </div>
+      <a id="convert-btn" title="Convert" class="btn btn-success" role="submit" onclick="submitFile()">
+        <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Convert
+      </a>
+    </form>
+    <br>
+	<form id="url-form" method="post">
+		<div class="form-group">
+			<label for="url">Or post your URL here</label>
+			<div><textarea rows="5" class="form-control" id="url" name="url" placeholder="Type here your url to audio file" value="" /></textarea></div>
+		</div>
+
+		<a title="Convert" class="btn btn-success" role="submit" onclick="document.getElementById('url-form').submit();">
+			<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Convert
+		</a>
+
+		<input type="hidden" name="token" value="{{.token}}">
+	</form>
+
+
+</div>
+{{end}}
+{{define "foot"}}{{end}}
