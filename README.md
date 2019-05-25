@@ -1,10 +1,16 @@
 # subtitlesfor.me 
 
 Basic MVC Web App that convert audio to subtitles by using speech to text from IBM Watson API.
-Audio can be provided from almost any video and audio formats except aac(due to IBM Watson API limitations)
-thanks to ffmpeg.
+Audio can be provided from almost any video and audio formats except aac(due to IBM Watson API limitations),
+also audio is splitted on several parts to speed up conversion(thanks to ffmpeg).
 
-Audio are converted to SRT caption/subtitle format from Watson STT generated JSON.
+Audio is converted to SRT caption/subtitle format from Watson STT generated JSON.
+
+##Build
+`go build`
+
+##Run
+`./subtitler`
 
 ##Usage
 To use this app you must have credentials from IBM Speech to Text service.
@@ -14,12 +20,10 @@ Add your credentials to `config/config.json`:
 
 ~~~ json
 {
-...
     "SpeechToTextOptions": {
         "URL": "url to your speech to text service location",
         "IAMApiKey": "your key here"
     },
-...
 }
 ~~~
 
