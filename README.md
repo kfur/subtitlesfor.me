@@ -6,13 +6,19 @@ also audio is splitted on several parts to speed up conversion(thanks to ffmpeg)
 
 Audio is converted to SRT caption/subtitle format from Watson STT generated JSON.
 
-# Build
+## Build
+Install dependencies:
+
+* MacOS: `brew install ffmpeg`
+* Ubuntu: `sudo apt install ffmpeg`
+
+Building:
 `go build`
 
-# Run
+## Run
 `./subtitler`
 
-# Usage
+## Usage
 To use this app you must have credentials from IBM Speech to Text service.
 You can grab it on your IBM Cloud profile page.
  
