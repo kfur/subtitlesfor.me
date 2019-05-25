@@ -10,7 +10,7 @@ Audio is converted to SRT caption/subtitle format from Watson STT generated JSON
 Install dependencies:
 
 * MacOS: `brew install ffmpeg`
-* Ubuntu: `sudo apt install ffmpeg`
+* Ubuntu: `sudo apt install ffmpeg libavformat-dev libavutil-dev libavfilter-dev libavdevice-dev libswscale-dev libswresample-dev`
 
 To build run:
 `go build`
