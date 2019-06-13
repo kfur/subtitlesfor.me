@@ -39,31 +39,33 @@ func IndexPOST(w http.ResponseWriter, r *http.Request) {
 
 		token = app.TokenGenerator()
 
-		// Open file with mp3 to recognize
-		audio, audioErr := http.Get(audioUrl)
-		if audioErr != nil {
-			fmt.Println(audioErr)
-			return
-		}
+		//// Open file with mp3 to recognize
+		//audio, audioErr := http.Get(audioUrl)
+		//if audioErr != nil {
+		//	fmt.Println(audioErr)
+		//	return
+		//}
 
 		waitConverted := sync.WaitGroup{}
 		var subtitles *app.SubtitlesRecognitionResultArray
 
 		go func() {
-			defer audio.Body.Close()
-			mimeType := audio.Header.Get("Content-Type")
-			splitedMimeType := strings.Split(mimeType, "/")
-			if len(splitedMimeType) != 2 {
-				//error
-			}
+			//defer audio.Body.Close()
+			//mimeType := audio.Header.Get("Content-Type")
+			//splitedMimeType := strings.Split(mimeType, "/")
+			//if len(splitedMimeType) != 2 {
+			//	//error
+			//}
 
 
-			subtitles = app.Recogniser.UploadToRecogniseWithAudioSplitting(audio.Body, splitedMimeType[1], token, &waitConverted)
+			//subtitles = app.Recogniser.UploadToRecogniseWithAudioSplitting(audio.Body, splitedMimeType[1], token, &waitConverted)
+			subtitles = app.Recogniser.LoadFromURL(audioUrl, token, &waitConverted)
 		}()
 
 		go func() {
 			time.Sleep(time.Second * 10)
 			waitConverted.Wait()
+			// TODO fix "subtitles suddenly is nil"
 			sort.Sort(subtitles)
 
 			subtilesStrs := srt.MakeSRTFromJSONChunks(*subtitles)

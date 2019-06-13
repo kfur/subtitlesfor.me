@@ -94,7 +94,7 @@ func (as *AudioSplitter) splitInput(audios chan *AudioChunk) {
 
 		duration = packet.Time(srcStream.TimeBase())
 		packet.SetStreamIndex(outStream.Index())
-		if duration < 150*aNum {
+		if duration < 300*aNum {
 			if err := outputCtx.WritePacket(packet); err != nil {
 				fatal(err)
 			}

@@ -18,6 +18,7 @@ package core
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -189,7 +190,7 @@ func (requestBuilder *RequestBuilder) SetBodyContentForMultipart(contentType str
 }
 
 // Build the request
-func (requestBuilder *RequestBuilder) Build() (*http.Request, error) {
+func (requestBuilder *RequestBuilder) Build(ctx context.Context) (*http.Request, error) {
 	// Create multipart form data
 	if len(requestBuilder.Form) > 0 {
 		// handle both application/x-www-form-urlencoded or multipart/form-data
@@ -226,6 +227,7 @@ func (requestBuilder *RequestBuilder) Build() (*http.Request, error) {
 	if err != nil {
 		return nil, err
 	}
+	req = req.WithContext(ctx)
 
 	// Headers
 	req.Header = requestBuilder.Header

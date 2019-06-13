@@ -18,6 +18,7 @@ package core
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -160,7 +161,7 @@ func (tm *TokenManager) requestToken() (*TokenInfo, error) {
 		AddFormData("apikey", "", "", tm.iamAPIkey).
 		AddFormData("response_type", "", "", RequestTokenResponseType)
 
-	req, err := builder.Build()
+	req, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -178,7 +179,7 @@ func (tm *TokenManager) refreshToken() (*TokenInfo, error) {
 	builder.AddFormData("grant_type", "", "", RefreshTokenGrantType).
 		AddFormData("refresh_token", "", "", tm.tokenInfo.RefreshToken)
 
-	req, err := builder.Build()
+	req, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}

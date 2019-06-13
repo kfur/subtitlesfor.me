@@ -18,9 +18,10 @@ package speechtotextv1
  */
 
 import (
+	"context"
 	"fmt"
 	"github.com/IBM/go-sdk-core/core"
-	common "github.com/watson-developer-cloud/go-sdk/common"
+	"github.com/watson-developer-cloud/go-sdk/common"
 	"io"
 	"os"
 	"strings"
@@ -112,7 +113,7 @@ func (speechToText *SpeechToTextV1) GetModel(getModelOptions *GetModelOptions) (
 
 	builder.AddHeader("Accept", "application/json")
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -157,7 +158,7 @@ func (speechToText *SpeechToTextV1) ListModels(listModelsOptions *ListModelsOpti
 
 	builder.AddHeader("Accept", "application/json")
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -245,7 +246,7 @@ func (speechToText *SpeechToTextV1) GetListModelsResult(response *core.DetailedR
 //
 // **See also:** [Making a multipart HTTP
 // request](https://cloud.ibm.com/docs/services/speech-to-text/http.html#HTTP-multi).
-func (speechToText *SpeechToTextV1) Recognize(recognizeOptions *RecognizeOptions) (*core.DetailedResponse, error) {
+func (speechToText *SpeechToTextV1) Recognize(recognizeOptions *RecognizeOptions, ctx context.Context) (*core.DetailedResponse, error) {
 	if err := core.ValidateNotNil(recognizeOptions, "recognizeOptions cannot be nil"); err != nil {
 		return nil, err
 	}
@@ -333,7 +334,7 @@ func (speechToText *SpeechToTextV1) Recognize(recognizeOptions *RecognizeOptions
 		return nil, err
 	}
 
-	request, err := builder.Build()
+	request, err := builder.Build(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -388,7 +389,7 @@ func (speechToText *SpeechToTextV1) CheckJob(checkJobOptions *CheckJobOptions) (
 
 	builder.AddHeader("Accept", "application/json")
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -437,7 +438,7 @@ func (speechToText *SpeechToTextV1) CheckJobs(checkJobsOptions *CheckJobsOptions
 
 	builder.AddHeader("Accept", "application/json")
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -633,7 +634,7 @@ func (speechToText *SpeechToTextV1) CreateJob(createJobOptions *CreateJobOptions
 		return nil, err
 	}
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -682,7 +683,7 @@ func (speechToText *SpeechToTextV1) DeleteJob(deleteJobOptions *DeleteJobOptions
 
 	builder.AddHeader("Accept", "")
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -748,7 +749,7 @@ func (speechToText *SpeechToTextV1) RegisterCallback(registerCallbackOptions *Re
 		builder.AddQuery("user_secret", fmt.Sprint(*registerCallbackOptions.UserSecret))
 	}
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -799,7 +800,7 @@ func (speechToText *SpeechToTextV1) UnregisterCallback(unregisterCallbackOptions
 
 	builder.AddQuery("callback_url", fmt.Sprint(*unregisterCallbackOptions.CallbackURL))
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -859,7 +860,7 @@ func (speechToText *SpeechToTextV1) CreateLanguageModel(createLanguageModelOptio
 		return nil, err
 	}
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -909,7 +910,7 @@ func (speechToText *SpeechToTextV1) DeleteLanguageModel(deleteLanguageModelOptio
 
 	builder.AddHeader("Accept", "application/json")
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -949,7 +950,7 @@ func (speechToText *SpeechToTextV1) GetLanguageModel(getLanguageModelOptions *Ge
 
 	builder.AddHeader("Accept", "application/json")
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -1001,7 +1002,7 @@ func (speechToText *SpeechToTextV1) ListLanguageModels(listLanguageModelsOptions
 		builder.AddQuery("language", fmt.Sprint(*listLanguageModelsOptions.Language))
 	}
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -1052,7 +1053,7 @@ func (speechToText *SpeechToTextV1) ResetLanguageModel(resetLanguageModelOptions
 
 	builder.AddHeader("Accept", "application/json")
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -1118,7 +1119,7 @@ func (speechToText *SpeechToTextV1) TrainLanguageModel(trainLanguageModelOptions
 		builder.AddQuery("customization_weight", fmt.Sprint(*trainLanguageModelOptions.CustomizationWeight))
 	}
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -1167,7 +1168,7 @@ func (speechToText *SpeechToTextV1) UpgradeLanguageModel(upgradeLanguageModelOpt
 
 	builder.AddHeader("Accept", "application/json")
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -1244,7 +1245,7 @@ func (speechToText *SpeechToTextV1) AddCorpus(addCorpusOptions *AddCorpusOptions
 	builder.AddFormData("corpus_file", "filename",
 		"text/plain", addCorpusOptions.CorpusFile)
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -1287,7 +1288,7 @@ func (speechToText *SpeechToTextV1) DeleteCorpus(deleteCorpusOptions *DeleteCorp
 
 	builder.AddHeader("Accept", "application/json")
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -1328,7 +1329,7 @@ func (speechToText *SpeechToTextV1) GetCorpus(getCorpusOptions *GetCorpusOptions
 
 	builder.AddHeader("Accept", "application/json")
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -1378,7 +1379,7 @@ func (speechToText *SpeechToTextV1) ListCorpora(listCorporaOptions *ListCorporaO
 
 	builder.AddHeader("Accept", "application/json")
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -1466,7 +1467,7 @@ func (speechToText *SpeechToTextV1) AddWord(addWordOptions *AddWordOptions) (*co
 		return nil, err
 	}
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -1553,7 +1554,7 @@ func (speechToText *SpeechToTextV1) AddWords(addWordsOptions *AddWordsOptions) (
 		return nil, err
 	}
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -1596,7 +1597,7 @@ func (speechToText *SpeechToTextV1) DeleteWord(deleteWordOptions *DeleteWordOpti
 
 	builder.AddHeader("Accept", "application/json")
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -1636,7 +1637,7 @@ func (speechToText *SpeechToTextV1) GetWord(getWordOptions *GetWordOptions) (*co
 
 	builder.AddHeader("Accept", "application/json")
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -1695,7 +1696,7 @@ func (speechToText *SpeechToTextV1) ListWords(listWordsOptions *ListWordsOptions
 		builder.AddQuery("sort", fmt.Sprint(*listWordsOptions.Sort))
 	}
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -1780,7 +1781,7 @@ func (speechToText *SpeechToTextV1) AddGrammar(addGrammarOptions *AddGrammarOpti
 		return nil, err
 	}
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -1822,7 +1823,7 @@ func (speechToText *SpeechToTextV1) DeleteGrammar(deleteGrammarOptions *DeleteGr
 
 	builder.AddHeader("Accept", "application/json")
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -1862,7 +1863,7 @@ func (speechToText *SpeechToTextV1) GetGrammar(getGrammarOptions *GetGrammarOpti
 
 	builder.AddHeader("Accept", "application/json")
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -1911,7 +1912,7 @@ func (speechToText *SpeechToTextV1) ListGrammars(listGrammarsOptions *ListGramma
 
 	builder.AddHeader("Accept", "application/json")
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -1977,7 +1978,7 @@ func (speechToText *SpeechToTextV1) CreateAcousticModel(createAcousticModelOptio
 		return nil, err
 	}
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -2027,7 +2028,7 @@ func (speechToText *SpeechToTextV1) DeleteAcousticModel(deleteAcousticModelOptio
 
 	builder.AddHeader("Accept", "application/json")
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -2067,7 +2068,7 @@ func (speechToText *SpeechToTextV1) GetAcousticModel(getAcousticModelOptions *Ge
 
 	builder.AddHeader("Accept", "application/json")
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -2119,7 +2120,7 @@ func (speechToText *SpeechToTextV1) ListAcousticModels(listAcousticModelsOptions
 		builder.AddQuery("language", fmt.Sprint(*listAcousticModelsOptions.Language))
 	}
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -2170,7 +2171,7 @@ func (speechToText *SpeechToTextV1) ResetAcousticModel(resetAcousticModelOptions
 
 	builder.AddHeader("Accept", "application/json")
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -2242,7 +2243,7 @@ func (speechToText *SpeechToTextV1) TrainAcousticModel(trainAcousticModelOptions
 		builder.AddQuery("custom_language_model_id", fmt.Sprint(*trainAcousticModelOptions.CustomLanguageModelID))
 	}
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -2304,7 +2305,7 @@ func (speechToText *SpeechToTextV1) UpgradeAcousticModel(upgradeAcousticModelOpt
 		builder.AddQuery("force", fmt.Sprint(*upgradeAcousticModelOptions.Force))
 	}
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -2441,7 +2442,7 @@ func (speechToText *SpeechToTextV1) AddAudio(addAudioOptions *AddAudioOptions) (
 		return nil, err
 	}
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -2484,7 +2485,7 @@ func (speechToText *SpeechToTextV1) DeleteAudio(deleteAudioOptions *DeleteAudioO
 
 	builder.AddHeader("Accept", "application/json")
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -2537,7 +2538,7 @@ func (speechToText *SpeechToTextV1) GetAudio(getAudioOptions *GetAudioOptions) (
 
 	builder.AddHeader("Accept", "application/json")
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -2589,7 +2590,7 @@ func (speechToText *SpeechToTextV1) ListAudio(listAudioOptions *ListAudioOptions
 
 	builder.AddHeader("Accept", "application/json")
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}
@@ -2643,7 +2644,7 @@ func (speechToText *SpeechToTextV1) DeleteUserData(deleteUserDataOptions *Delete
 
 	builder.AddQuery("customer_id", fmt.Sprint(*deleteUserDataOptions.CustomerID))
 
-	request, err := builder.Build()
+	request, err := builder.Build(context.Background())
 	if err != nil {
 		return nil, err
 	}

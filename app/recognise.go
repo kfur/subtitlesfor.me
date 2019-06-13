@@ -85,7 +85,7 @@ var Recogniser *RecogniseService
 func InitRecogniseService() {
 	// Instantiate the Watson Speech To Text service
 	var serviceErr error
-	var Recogniser = RecogniseService{}
+	Recogniser = new(RecogniseService)
 	Recogniser.service, serviceErr = speechtotextv1.
 		NewSpeechToTextV1(&speechtotextv1.SpeechToTextV1Options{
 			URL:       c.Config.STTOptions.URL,
@@ -106,7 +106,7 @@ func (r* RecogniseService) Recognise(source io.ReadCloser, contentType string, i
 
 	// Create a new RecognizeOptions for ContentType "audio/mp3"
 	recognizeOptions := r.service.
-		NewRecognizeOptions(source, contentType)
+		NewRecognizeOptions(source)
 
 	recognizeOptions.SetTimestamps(true)
 	recognizeOptions.SetProfanityFilter(false)
@@ -189,6 +189,78 @@ func (r* RecogniseService) UploadToRecogniseWithAudioSplitting(file io.ReadClose
 		go func(position uint, duration float64) {
 			recognizeResult := r.Recognise(&ReadCloserWithCallback{
 				chunkAudioReader,
+				callback},
+				"audio/" + a.CodecName,
+				tokenData.Cancel)
+
+			if recognizeResult == nil {
+				TokenMap[token].Subtitles <- Subtitles{"", "", errors.New("Error")}
+				return
+			}
+
+			recResultData, err := json.Marshal(recognizeResult)
+			if err != nil {
+				fmt.Println(err)
+				TokenMap[token].Subtitles <- Subtitles{"", "", errors.New("Error")}
+				return
+			}
+
+			//fmt.Println(strings.Join(srtStrs, "\n"))
+			subtitlesLock.Lock()
+			subtitles = append(subtitles, SubtitlesChunk{string(recResultData), position, duration})
+			subtitlesLock.Unlock()
+
+			waitConverted.Done()
+			//TokenMap[token].Subtitles <- strings.Join(srtStrs, "\n")
+		}(position, a.Duration)
+		position++
+	}
+
+	// Wait for request body closing by http client
+	// Because body will be closed if we pass without waiting
+	fmt.Println("Wait for body closing")
+	waitUntilUploaded.Wait()
+
+	return &subtitles
+}
+
+func (r* RecogniseService) LoadFromURL(url string, token string, waitConverted *sync.WaitGroup) *SubtitlesRecognitionResultArray {
+
+	waitUntilUploaded := sync.WaitGroup{}
+	subtitlesLock := sync.Mutex{}
+	subtitles := SubtitlesRecognitionResultArray{}
+
+	ictx := gmf.NewCtx()
+	defer ictx.Close()
+
+	ictx.SetDebug(1)
+
+	err := ictx.OpenInput(url)
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+
+	as := audio.AudioSplitter{InputCtx:ictx}
+
+	tokenData := TokeData{make(chan Subtitles), new(context.CancelFunc)}
+	TokenMap[token] = tokenData
+
+	callback := func(readCloser *ReadCloserWithCallback) {
+		waitUntilUploaded.Done()
+	}
+
+	var position uint = 0
+	for a := range as.GetAudioChunks() {
+		fmt.Println("Audio FIle ")
+		waitUntilUploaded.Add(1)
+		waitConverted.Add(1)
+
+		//chunkAudioReader := bytes.NewReader(a.Data.Bytes())
+		// Converting
+		go func(position uint, duration float64) {
+			recognizeResult := r.Recognise(&ReadCloserWithCallback{
+				a.Data,
 				callback},
 				"audio/" + a.CodecName,
 				tokenData.Cancel)
